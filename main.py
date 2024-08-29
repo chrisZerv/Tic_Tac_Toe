@@ -1,10 +1,13 @@
 import random
 
+
 def print_board(board):
     """Prints the current state of the board."""
-    for row in board:
-        print("|".join(row))
-        print("-" * 5)
+    for i, row in enumerate(board):
+        print(" | ".join(row))
+        if i < 2:  # Don't print the separator after the last row
+            print("-" * 9)
+
 
 def check_winner(board, player):
     """Checks if a player has won the game."""
@@ -21,12 +24,14 @@ def check_winner(board, player):
 
     return False
 
+
 def is_draw(board):
     """Checks if the game is a draw (i.e., no more moves left)."""
     for row in board:
         if " " in row:
             return False
     return True
+
 
 def get_available_moves(board):
     """Returns a list of available moves on the board."""
@@ -36,6 +41,7 @@ def get_available_moves(board):
             if board[row][col] == " ":
                 available_moves.append((row, col))
     return available_moves
+
 
 def make_move(board, player):
     """Allows a player to make a move."""
@@ -53,6 +59,7 @@ def make_move(board, player):
             break
         except ValueError:
             print("Invalid input. Please enter a number between 1 and 9.")
+
 
 def ai_move(board, player):
     """AI makes a move."""
@@ -78,19 +85,33 @@ def ai_move(board, player):
     row, col = random.choice(get_available_moves(board))
     board[row][col] = player
 
+
 def tic_tac_toe():
     """Main function to play the game."""
     board = [[" " for _ in range(3)] for _ in range(3)]
-    player_choice = input("Do you want to play as X or O? ").upper()
+
+    # Prompt the user to choose X or O, and validate input
+    while True:
+        player_choice = input("Do you want to play as X or O? ").upper()
+        if player_choice in ["X", "O"]:
+            break
+        else:
+            print("Invalid choice. Please choose either X or O.")
+
     current_player = "X"
 
     while True:
+        print("\nCurrent board:")
         print_board(board)
 
         if current_player == player_choice:
             make_move(board, current_player)
         else:
+            print("\nThe AI is making a move...")
             ai_move(board, current_player)
+
+        # Add a clear separator between moves
+        print("\n" + "=" * 20 + "\n")
 
         if check_winner(board, current_player):
             print_board(board)
@@ -103,6 +124,7 @@ def tic_tac_toe():
             break
 
         current_player = "O" if current_player == "X" else "X"
+
 
 if __name__ == "__main__":
     tic_tac_toe()
